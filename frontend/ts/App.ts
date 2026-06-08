@@ -1,7 +1,7 @@
 import { BenefitService } from "./benefitService.js";
 import type { BenefitResponse } from "./types.js";
 
-const STORAGE_KEY = "parental-benefit:lastBenefitId";
+const STORAGE_KEY = "parental-benefit:lastBenefitInputId";
 const benefitService = new BenefitService();
 
 const form = getRequiredElement<HTMLFormElement>("#benefit-form");
@@ -30,7 +30,7 @@ function init(): void {
   if (savedId) {
     idInput.value = String(savedId);
     setStatus(
-      `Recent input saved with Retrieval Code (${savedId}). You can load it anytime.`,
+      `Recent input saved with Retrieval Code ${savedId}. You can load it anytime.`,
     );
   }
 }
