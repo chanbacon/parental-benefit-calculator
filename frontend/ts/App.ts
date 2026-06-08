@@ -15,7 +15,7 @@ const savedIdElement = getRequiredElement<HTMLParagraphElement>("#saved-id");
 const statsElement = getRequiredElement<HTMLDivElement>("#stats");
 const paymentsBody =
   getRequiredElement<HTMLTableSectionElement>("#payments-body");
-const benefitIdInput = getRequiredElement<HTMLInputElement>("#benefit-id");
+const idInput = getRequiredElement<HTMLInputElement>("#id-input");
 const loadByIdButton = getRequiredElement<HTMLButtonElement>("#load-by-id-btn");
 
 init();
@@ -28,9 +28,9 @@ function init(): void {
 
   const savedId = getSavedId();
   if (savedId) {
-    benefitIdInput.value = String(savedId);
+    idInput.value = String(savedId);
     setStatus(
-      `Recent calculation saved under ID (${savedId}). You can load it anytime.`,
+      `Recent input saved with Retrieval Code (${savedId}). You can load it anytime.`,
     );
   }
 }
@@ -64,17 +64,17 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
 
   try {
     // backend create call doubles as persistence, then we store id locally for resume.
-    const result = await benefitService.createBenefit({
+    const result = await benefitService.createBenefitInput({
       grossSalary,
       birthDate,
     });
     saveId(result.id);
-    benefitIdInput.value = String(result.id);
+    idInput.value = String(result.id);
 
     renderResult(result);
     setValidationMessage("");
     setStatus(
-      `Recent calculation saved under ID (${result.id}). You can load it anytime.`,
+      `Recent input saved with Retrival Code ${result.id}. You can load it anytime.`,
     );
   } catch (error) {
     const message =
@@ -85,10 +85,10 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
 
 async function onLoadByIdClick(): Promise<void> {
   setValidationMessage("");
-  const id = Number(benefitIdInput.value);
+  const id = Number(idInput.value);
 
   if (!Number.isInteger(id) || id <= 0) {
-    setStatus("Enter a valid benefit ID.");
+    setStatus("Enter a valid Retrieval Code.");
     return;
   }
 
@@ -96,27 +96,27 @@ async function onLoadByIdClick(): Promise<void> {
 }
 
 async function loadAndRenderById(id: number): Promise<void> {
-  setStatus(`Loading benefit #${id}...`);
+  setStatus(`Loading Retrieval Code #${id}...`);
 
   try {
-    const result = await benefitService.getBenefitById(id);
+    const result = await benefitService.getBenefitInputById(id);
     saveId(result.id);
 
     salaryInput.value = String(result.grossSalary);
     birthDateInput.value = result.birthDate;
-    benefitIdInput.value = String(result.id);
+    idInput.value = String(result.id);
 
     renderResult(result);
-    setStatus(`Loaded benefit #${id}.`);
+    setStatus(`Loaded input with Retrieval Code ${id}.`);
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Failed to load saved benefit.";
+      error instanceof Error ? error.message : "Failed to load benefit input.";
     setStatus(message);
   }
 }
 
 function renderResult(result: BenefitResponse): void {
-  savedIdElement.textContent = `Saved Benefit ID: ${result.id}`;
+  savedIdElement.textContent = `Saved input with Retrieval Code: ${result.id}`;
 
   statsElement.innerHTML = [
     makeStatChip(`Gross salary: EUR ${formatMoney(result.grossSalary)}`),

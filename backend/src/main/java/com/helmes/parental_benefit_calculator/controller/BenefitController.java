@@ -30,16 +30,13 @@ public class BenefitController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a benefit request and return calculated schedule")
     public BenefitResponse createBenefit(@Valid @RequestBody BenefitRequest request) {
-        return benefitService.createBenefit(request);
+        return benefitService.createBenefitInput(request);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Retrieve benefit data and return calculated schedule")
     public BenefitResponse getBenefitById(
-            @Parameter(description = "ID of stored benefit data", example = "1")
-            @PathVariable
-            @Min(value = 1, message = "Id must be greater than 0")
-            Long id) {
-        return benefitService.getBenefitById(id);
+            @Parameter(description = "ID of stored benefit data", example = "1") @PathVariable @Min(value = 1, message = "Id must be greater than 0") Long id) {
+        return benefitService.getBenefitInputById(id);
     }
 }

@@ -7,7 +7,7 @@ export class BenefitService {
     this.apiBaseUrl = apiBaseUrl;
   }
 
-  async createBenefit(request: BenefitRequest): Promise<BenefitResponse> {
+  async createBenefitInput(request: BenefitRequest): Promise<BenefitResponse> {
     // create endpoint persists input and returns calculated payment breakdown.
     const response = await fetch(this.apiBaseUrl, {
       method: "POST",
@@ -20,7 +20,7 @@ export class BenefitService {
     return this.parseResponse(response);
   }
 
-  async getBenefitById(id: number): Promise<BenefitResponse> {
+  async getBenefitInputById(id: number): Promise<BenefitResponse> {
     const response = await fetch(`${this.apiBaseUrl}/${id}`, {
       method: "GET",
     });

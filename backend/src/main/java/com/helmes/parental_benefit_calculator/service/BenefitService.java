@@ -3,9 +3,9 @@ package com.helmes.parental_benefit_calculator.service;
 import com.helmes.parental_benefit_calculator.dto.BenefitRequest;
 import com.helmes.parental_benefit_calculator.dto.BenefitResponse;
 import com.helmes.parental_benefit_calculator.dto.MonthlyPayment;
-import com.helmes.parental_benefit_calculator.entity.Benefit;
+import com.helmes.parental_benefit_calculator.entity.BenefitInput;
 import com.helmes.parental_benefit_calculator.exception.ResourceNotFoundException;
-import com.helmes.parental_benefit_calculator.repository.BenefitRepository;
+import com.helmes.parental_benefit_calculator.repository.BenefitInputRepository;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,53 +17,52 @@ import java.util.List;
 public class BenefitService {
 
     private static final Logger log = LoggerFactory.getLogger(BenefitService.class);
-    private final BenefitRepository benefitRepository;
+    private final BenefitInputRepository benefitInputRepository;
     private final CalculationService calculationService;
 
-    public BenefitService(BenefitRepository benefitRepository, CalculationService calculationService) {
-        this.benefitRepository = benefitRepository;
+    public BenefitService(BenefitInputRepository benefitRepository, CalculationService calculationService) {
+        this.benefitInputRepository = benefitRepository;
         this.calculationService = calculationService;
     }
 
-    public BenefitResponse createBenefit(BenefitRequest request) {
-        log.info("Creating benefit for salary {} and birth date {}", request.getGrossSalary(), request.getBirthDate());
-        
-        Benefit benefit = new Benefit();
-        benefit.setGrossSalary(request.getGrossSalary());
-        benefit.setBirthDate(request.getBirthDate());
-        Benefit savedBenefit = benefitRepository.save(benefit);
+    public BenefitResponse createBenefitInput(BenefitRequest request) {
+        log.info("Creating benefit input for salary {} and birth date {}", request.getGrossSalary(),
+                request.getBirthDate());
 
-        log.info("Benefit saved with id {}", savedBenefit.getId());
+        BenefitInput benefitInput = new BenefitInput();
+        benefitInput.setGrossSalary(request.getGrossSalary());
+        benefitInput.setBirthDate(request.getBirthDate());
+        BenefitInput savedBenefitInput = benefitInputRepository.save(benefitInput);
 
-        return mapToResponse(savedBenefit);
+        log.info("Benefit inputs saved with id {}", savedBenefitInput.getId());
+
+        return mapToResponse(savedBenefitInput);
     }
 
-    public BenefitResponse getBenefitById(Long id) {
-        log.info("Fetching benefit with id {}", id);
+    public BenefitResponse getBenefitInputById(Long id) {
+        log.info("Fetching benefit input with id {}", id);
 
-        Benefit benefit = benefitRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Benefit not found with id: " + id));
+        BenefitInput benefitInput = benefitInputRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Benefit input not found with id: " + id));
 
-        log.info("Benefit found with id {}", id);
-        return mapToResponse(benefit);
+        log.info("Benefit input found with id {}", id);
+        return mapToResponse(benefitInput);
     }
 
-    private BenefitResponse mapToResponse(Benefit benefit) {
-        BigDecimal cappedSalary = calculationService.calculateCappedSalary(benefit.getGrossSalary());
+    private BenefitResponse mapToResponse(BenefitInput benefitInput) {
+        BigDecimal cappedSalary = calculationService.calculateCappedSalary(benefitInput.getGrossSalary());
         BigDecimal dailyRate = calculationService.calculateDailyRate(cappedSalary);
 
         List<MonthlyPayment> monthlyPayments = calculationService.calculateMonthlyPayments(
                 dailyRate,
-                benefit.getBirthDate()
-        );
+                benefitInput.getBirthDate());
 
         return new BenefitResponse(
-                benefit.getId(),
-                benefit.getGrossSalary(),
-                benefit.getBirthDate(),
+                benefitInput.getId(),
+                benefitInput.getGrossSalary(),
+                benefitInput.getBirthDate(),
                 cappedSalary,
                 dailyRate,
-                monthlyPayments
-        );
+                monthlyPayments);
     }
 }
