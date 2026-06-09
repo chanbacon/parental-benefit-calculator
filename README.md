@@ -38,7 +38,7 @@ A mobile-friendly web application that calculates Estonia's parental benefits ba
 - Separation of frontend and backend for clarity and easier future extension
 - SQLite for simplicity and local persistence
 - Docker for consistent and reliable local setup
-- JUnit for unit and integration test, and Playwright for end-to-end testing
+- JUnit for unit and integration tests, and Playwright for end-to-end tests
 
 ## Running the Application with Docker
 
@@ -107,11 +107,11 @@ Errors are shown for invalid input
 
 ## Automated Tests
 
-The project utilises a dual-layer strategy to ensure correct business logic and user-flow reliability
+The project utilises a dual-layer strategy to ensure correct business logic and user workflow reliability
 
-### Backend automation (JUnit)
+### Unit & Integration Tests (JUnit)
 
-Backend tests provide targeted coverage for data integrity and business rules:
+JUnit tests provide targeted coverage for data integrity and business rules:
 
 - **Coverage**
   1. Calculation logic and boundary values
@@ -121,19 +121,14 @@ Backend tests provide targeted coverage for data integrity and business rules:
   - Mac/Linux: `./mvnw clean test`
   - Windows: `.\mvnw.cmd clean test`
 
-### Frontend E2E Automation (Playwright)
+### End-to-End Tests (Playwright)
 
-Frontend tests simulate real user sessions to verify UI layout stability and reactive states:
+End-to-end tests simulate real user sessions to verify user workflows:
 
 - **Location**: `tests/benefit-calculator.spec.ts`
-- **Coverage**: Form submission, 12-month breakdown rendering, dynamic page reloads, and form validation state resets.
-- **Traceability**: Links directly to [Test Plan](doc/test_plan.md) and [Bug Report](docs/BUG-001-table-not-cleared.md)
-- **Execution**:
-
-```bash
-npm install
-npx playwright test
-```
+- **Coverage**: Form submission, calculation table rendering, input validation, data retrieval from database
+- **Documentation**: [Test Plan](docs/test_plan.md) and [Bug Report](docs/BUG-001-table-not-cleared.md)
+- **Execution**: `npm instal && npx playwright test`
 
 ## API Endpoints
 

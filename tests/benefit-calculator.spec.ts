@@ -22,9 +22,12 @@ test("E2E-01: should calculate parental benefit breakdown for valid input", asyn
   const februaryRow = table.locator("tr", {
     has: page.locator("td:first-child", { hasText: "2026-02" }),
   });
+  const month = februaryRow.locator("td:first-child");
   const days = februaryRow.locator("td:nth-child(2)");
   const payment = februaryRow.locator("td:nth-child(3)");
 
+  await expect(month).toBeVisible();
+  await expect(month).toHaveText("2026-02");
   await expect(days).toHaveText("28");
   await expect(payment).toHaveText("2800.00");
   await expect(page.getByText(/Retrieval Code:\s*\d+/)).toBeVisible();
@@ -56,9 +59,12 @@ test("E2E-02B: should show validation message and clear results for invalid inpu
   const februaryRow = table.locator("tr", {
     has: page.locator("td:first-child", { hasText: "2026-02" }),
   });
+  const month = februaryRow.locator("td:first-child");
   const days = februaryRow.locator("td:nth-child(2)");
   const payment = februaryRow.locator("td:nth-child(3)");
 
+  await expect(month).toBeVisible();
+  await expect(month).toHaveText("2026-02");
   await expect(days).toHaveText("28");
   await expect(payment).toHaveText("2800.00");
   await expect(page.getByText(/Retrieval Code:\s*\d+/)).toBeVisible();
@@ -68,6 +74,7 @@ test("E2E-02B: should show validation message and clear results for invalid inpu
   await salaryInput.fill("-100");
   await calculateButton.click();
 
+  // result
   await expect(page.locator("#validation-message")).toBeVisible();
   await expect(
     page.getByText("Submit input to see the 12-month payment breakdown"),
@@ -86,13 +93,17 @@ test("E2E-03: should retrieve input and calculate parental benefit breakdown for
   const februaryRow = table.locator("tr", {
     has: page.locator("td:first-child", { hasText: "2026-02" }),
   });
+  const month = februaryRow.locator("td:first-child");
   const days = februaryRow.locator("td:nth-child(2)");
   const payment = februaryRow.locator("td:nth-child(3)");
 
+  await expect(month).toBeVisible();
+  await expect(month).toHaveText("2026-02");
   await expect(days).toHaveText("28");
   await expect(payment).toHaveText("2800.00");
   await expect(page.getByText(/Retrieval Code:\s*\d+/)).toBeVisible();
   await expect(page.locator("#validation-message")).not.toBeVisible();
+
   const codeText = await page.getByText(/Retrieval Code:/).textContent();
   const retrievalCode = codeText?.replace(/\D/g, "");
 
@@ -102,6 +113,8 @@ test("E2E-03: should retrieve input and calculate parental benefit breakdown for
   await page.getByLabel("Or load by Retrieval Code").fill(retrievalCode!);
   await page.getByRole("button", { name: "Load" }).click();
 
+  await expect(month).toBeVisible();
+  await expect(month).toHaveText("2026-02");
   await expect(februaryRow).toBeVisible();
   await expect(days).toHaveText("28");
   await expect(payment).toHaveText("2800.00");

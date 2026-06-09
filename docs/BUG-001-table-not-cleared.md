@@ -1,31 +1,32 @@
 # [BUG-001 / E2E-02B] Calculation table not cleared after submitting invalid input
 
-## Environment:
+### Environment:
 
-Windows 11, Playwright version 1.60.0 chromium test, main:f3cccafa0021fff8e98e68c9097c11e556e22ca3
+Windows 11, Playwright version 1.60.0 chromium test, main: f3cccafa0021fff8e98e68c9097c11e556e22ca3
 
-## Severity:
+### Severity:
 
 Medium - Functional UI issue that presents misleading data to user
 
-## Priority:
+### Priority:
 
 Medium - Fix required before next release to prevent degraded UX
 
-## Description:
+### Description:
 
 After a successful calculation with result table displayed, submitting an invalid input displays the validation error message but fails to clear the results table, leaving stale data visible to the user.
 
-## Steps to Reproduce:
+### Steps to Reproduce:
 
 - Preconditions:
-  - Application is open
-  - A valid calculation has been performed (Salary: `3000`, Date: `2026-01-01`), and the breakdown table is visible.
+  1. Application is opened
+  2. A valid input is submitted
+  3. A valid calculation has been performed (Salary: `3000`, Birth date: `2026-01-01`), and the calculation table is displayed.
 - Steps:
   1. Change salary to `-100`.
   2. Click `Calculate`.
 
-## Expected vs. Actual Result:
+### Expected vs. Actual Results:
 
 Expected:
 
@@ -37,7 +38,7 @@ Actual:
 1. Validation message is displayed.
 2. Previous calculation table is NOT cleared, and the default placeholder text fails to reappear.
 
-## Automated Test Evidence:
+### Automated Test Evidence:
 
 ```
   1) [chromium] › tests/benefit-calculator.spec.ts:47:5 › E2E-02B: should show validation message and clear results for invalid input after valid calculation
