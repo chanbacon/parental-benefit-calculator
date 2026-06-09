@@ -22,7 +22,7 @@ A mobile-friendly web application that calculates Estonia's parental benefits ba
 - Frontend: TypeScript
 - Backend: Java 17, Spring Boot
 - Database: SQLite
-- Testing: JUnit
+- Testing: JUnit, Playwright
 - Documentation: Swagger (Springdoc)
 
 ## Architecture
@@ -38,6 +38,7 @@ A mobile-friendly web application that calculates Estonia's parental benefits ba
 - Separation of frontend and backend for clarity and easier future extension
 - SQLite for simplicity and local persistence
 - Docker for consistent and reliable local setup
+- JUnit for unit and integration test, and Playwright for end-to-end testing
 
 ## Running the Application with Docker
 
@@ -106,12 +107,33 @@ Errors are shown for invalid input
 
 ## Automated Tests
 
-- Backend tests cover:
-  1. Calculation logic
-  2. API endpoints
-- Run tests (from `backend` directory):
+The project utilises a dual-layer strategy to ensure correct business logic and user-flow reliability
+
+### Backend automation (JUnit)
+
+Backend tests provide targeted coverage for data integrity and business rules:
+
+- **Coverage**
+  1. Calculation logic and boundary values
+  2. REST API endpoints and response code
+
+- **Execution** (from `backend` directory):
   - Mac/Linux: `./mvnw clean test`
   - Windows: `.\mvnw.cmd clean test`
+
+### Frontend E2E Automation (Playwright)
+
+Frontend tests simulate real user sessions to verify UI layout stability and reactive states:
+
+- **Location**: `tests/benefit-calculator.spec.ts`
+- **Coverage**: Form submission, 12-month breakdown rendering, dynamic page reloads, and form validation state resets.
+- **Traceability**: Links directly to [Test Plan](doc/test_plan.md) and [Bug Report](docs/BUG-001-table-not-cleared.md)
+- **Execution**:
+
+```bash
+npm install
+npx playwright test
+```
 
 ## API Endpoints
 
